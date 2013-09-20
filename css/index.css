@@ -1,0 +1,14 @@
+.login_box{
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 5px 10px;
+    width: 20%;
+    height: 30%;
+    margin-top: 15%;
+    margin-left: 40%;
+}
+
+.main {
+    min-height: 100%;
+    min-width: 100%;
+}
