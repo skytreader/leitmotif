@@ -36,6 +36,11 @@ class WordDictionary(object):
         pass
 
 class SortedFileListDictionary(WordDictionary):
+    """
+    Reads its initial dictionary from a text file with one word per line.
+    Assumes that the text file has sorted the words by frequency of word use in
+    descending order (most frequent first).
+    """
     
     def __init__(self, filename, exclusions):
         super(SortedFileListDictionary, self).__init__()
