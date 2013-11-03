@@ -15,7 +15,7 @@ def sanitize(s):
     punctuation, etc. that may be in the beginning or end of the string.
     """
     sanitized = s
-    non_word_match = non_word_regex.match(sanitized)
+    non_word_match = non_word_regex.search(sanitized)
 
     while non_word_match is not None:
         match_span = non_word_match.span()
@@ -25,6 +25,18 @@ def sanitize(s):
         else:
             sanitized = sanitized[0:match_span[0]]
 
-        non_word_match = non_word_regex.match(sanitized)
+        non_word_match = non_word_regex.search(sanitized)
 
-    return sanitized        
+    return sanitized
+
+class FunctionsTest(unittest.TestCase):
+    
+    # TODO More unit tests!
+    def test_sanitize(self):
+        tests = {"...xkcd":"xkcd", "xkcd...":"xkcd", "...xkcd...":"xkcd"}
+
+        for test in tests.keys():
+            self.assertEqual(sanitize(test), tests[test])
+
+if __name__ == "__main__":
+    unittest.main()
