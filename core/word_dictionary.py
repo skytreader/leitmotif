@@ -1,7 +1,9 @@
 """
 Defines a dictionary structure.
 
-(Actually, just a word list for look-up.)
+(Actually, just a word list for look-up. Can be stored in any manner though:
+plain lists, binary trees, hashes (?)...pick your own poison. Would also decide
+how to load words into memory.)
 """
 
 class WordDictionary(object):
