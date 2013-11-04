@@ -1,5 +1,5 @@
 import re
-from utils import sanitize
+from utils import wordbook_sanitize
 
 class WordTally(object):
     """
@@ -72,7 +72,7 @@ class HashTally(WordTally):
                 words = self.__space_sep.split(line)
 
                 for w in words:
-                    w = sanitize(w)
+                    w = wordbook_sanitize(w)
                     if self.__tally.has_key(w):
                         self.__tally[w] += 1
                     else:
@@ -84,7 +84,7 @@ class HashTally(WordTally):
         words = self.__space_sep.split(line)
 
         for w in words:
-            w = sanitize(w)
+            w = wordbook_sanitize(w)
             if self.__tally.has_key(w):
                 self.__tally[w] += 1
             else:
