@@ -45,6 +45,11 @@ class SortedFileListDictionary(WordDictionary):
     """
     
     def __init__(self, filename, exclusions):
+        """
+        Create an instance of SortedFileListDictionary. filename is a string
+        describing the path of the sorted file list. exclusions is an iterable
+        containing the words to exclude from the dictionary.
+        """
         super(SortedFileListDictionary, self).__init__()
         self.__exclude_list = set(exclusions)
         temp_list = []

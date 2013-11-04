@@ -1,5 +1,11 @@
 import re
+import unittest
+
+from english import PRONOUNS, ARTICLES
 from utils import wordbook_sanitize
+from word_dictionary import SortedFileListDictionary
+
+nonsense_english = PRONOUNS.union(ARTICLES)
 
 class WordTally(object):
     """
@@ -74,7 +80,6 @@ class HashTally(WordTally):
             else:
                 self.__tally[w] = 1
     
-    # TODO Refactor!
     def __count_as_file(self, filename):    
         with open(filename) as corpus:
             for line in corpus:
@@ -89,3 +94,15 @@ class HashTally(WordTally):
         words = self.__space_sep.split(line)
 
         self.__count_flat(words)
+
+class HashTallyTest(unittest.TestCase):
+    
+    def setUp(self):
+        dictionary_path = "../corpus/sorted_word_list.txt"
+        sorted_dictionary = SortedFileListDictionary(self, dictionary_path,
+          nonsense_english)
+
+        self.tally_keeper = HashTally(sorted_dictionary)
+
+if __name__ == "__main__":
+    unittest.main()
