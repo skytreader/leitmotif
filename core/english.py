@@ -10,3 +10,12 @@ PRONOUNS = set(("i", "me", "my", "mine", "myself", "we", "us", "our", "ours",
 
 ARTICLES = set(("a", "is", "the", "be", "and", "of", "in", "to", "that", "for"
     "with", "on", "do", "this"))
+
+TEST_CORPUS_FILENAME = "../corpus/great_expectations.txt"
+
+TEST_CORPUS_TEXT = ""
+
+# Fill up TEST_CORPUS_TEXT with the contents of TEST_CORPUS_FILENAME
+with open(TEST_CORPUS_FILENAME) as great_expectations:
+    for line in great_expectations:
+        TEST_CORPUS_TEXT = "".join((TEST_CORPUS_TEXT, line))
