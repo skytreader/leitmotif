@@ -7,7 +7,6 @@ class WordTally(object):
     words should be case-insensitive. It is the responsibility of the
     implementations of this class to keep the counting case-insensitive.
     """
-    # TODO Should also remove trailing (and leading?) punctuation marks.
     
     def __init__(self, word_dictionary):
         """
@@ -63,6 +62,17 @@ class HashTally(WordTally):
             return self.__count_as_file(text)
         else:
             return self.__count_raw_text(text)
+
+    def __count_flat(self, words):
+        """
+        Count the words in iterable words and update self.__tally .
+        """
+        for w in words:
+            w = wordbook_sanitize(w)
+            if self.__tally.has_key(w):
+                self.__tally[w] += 1
+            else:
+                self.__tally[w] = 1
     
     # TODO Refactor!
     def __count_as_file(self, filename):    
@@ -71,21 +81,11 @@ class HashTally(WordTally):
                 line = line.strip()
                 words = self.__space_sep.split(line)
 
-                for w in words:
-                    w = wordbook_sanitize(w)
-                    if self.__tally.has_key(w):
-                        self.__tally[w] += 1
-                    else:
-                        self.__tally[w] = 1
+                self.__count_flat(words)
 
     def __count_raw_text(self, text):
         text = text.strip()
         # TODO We should also account for possible newlines inside the text.
         words = self.__space_sep.split(line)
 
-        for w in words:
-            w = wordbook_sanitize(w)
-            if self.__tally.has_key(w):
-                self.__tally[w] += 1
-            else:
-                self.__tally[w] = 1
+        self.__count_flat(words)
