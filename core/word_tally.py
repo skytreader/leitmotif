@@ -64,6 +64,10 @@ class HashTally(WordTally):
         return self.__tally[word.lower()]
     
     def count(self, text, is_file = True):
+        """
+        Word count is maintained as an internal state of this object. Repeated
+        invocations of count would increment the internal state.
+        """
         if is_file:
             return self.__count_as_file(text)
         else:
