@@ -1,1 +1,2 @@
-python dummy.py
+python core/utils.py
+python core/word_tally.py
