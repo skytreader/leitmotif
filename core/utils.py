@@ -46,8 +46,8 @@ def get_corpus_path(corpus_filepath):
 
     if runparse[tld] == package_root and runparse[rundir] == package_directory:
         return ".." + os.sep + corpus_filepath
-    elif runparse[tld] == package_root:
-        return corpus_file
+    elif runparse[rundir] == package_root:
+        return corpus_filepath
     else:
         raise UnsurePathException(corpus_filepath)
 

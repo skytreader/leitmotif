@@ -99,7 +99,7 @@ class HashTallyTest(unittest.TestCase):
     
     def setUp(self):
         # This will be ran from root directory of this project.
-        dictionary_path = "corpus/sorted_word_list.txt"
+        dictionary_path = get_corpus_path("corpus/sorted_word_list.txt")
         sorted_dictionary = SortedFileListDictionary(self, dictionary_path,
           nonsense_english)
 

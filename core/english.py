@@ -2,6 +2,7 @@
 Python listing of various English word categories (articles, pronouns, etc).
 Everything is in lowercase.
 """
+from utils import get_corpus_path
 
 PRONOUNS = set(("i", "me", "my", "mine", "myself", "we", "us", "our", "ours",
     "ourselves", "you", "your", "yours", "yourself", "yourselves", "he", "his",
@@ -12,7 +13,7 @@ ARTICLES = set(("a", "is", "the", "be", "and", "of", "in", "to", "that", "for"
     "with", "on", "do", "this"))
 
 # Relative to the root of this project
-TEST_CORPUS_FILENAME = "corpus/great_expectations.txt"
+TEST_CORPUS_FILENAME = get_corpus_path("corpus/great_expectations.txt")
 
 TEST_CORPUS_TEXT = ""
 
