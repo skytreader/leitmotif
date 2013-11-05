@@ -2,7 +2,7 @@ import re
 import unittest
 
 from english import PRONOUNS, ARTICLES
-from utils import wordbook_sanitize
+from utils import get_corpus_path, wordbook_sanitize
 from word_dictionary import SortedFileListDictionary
 
 nonsense_english = PRONOUNS.union(ARTICLES)
