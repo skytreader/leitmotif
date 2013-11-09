@@ -28,10 +28,11 @@ class WordTally(object):
     def get_word_count(self, word):
         """
         Returns how many instances of the word have we encountered so far.
+        Return 0 if the word has never been encountered before.
         """
         pass
 
-    def count(self, text, is_file = True):
+    def count(self, text, is_filename = True):
         """
         Counts the occurrences of words in the given text. Note that if the
         is_file flag is set to true, the parameter text is taken as a filename.
@@ -60,15 +61,19 @@ class HashTally(WordTally):
         self.__tally = {}
 
     def get_word_count(self, word):
-        # TODO For words not counted, catch the exception and return 0
-        return self.__tally[word.lower()]
+        word_count = self.__tally.get(word)
+
+        if word_count:
+            return word_count
+        else:
+            return 0
     
-    def count(self, text, is_file = True):
+    def count(self, text, is_filename = True):
         """
         Word count is maintained as an internal state of this object. Repeated
         invocations of count would increment the internal state.
         """
-        if is_file:
+        if is_filename:
             return self.__count_as_file(text)
         else:
             return self.__count_raw_text(text)
@@ -102,12 +107,20 @@ class HashTally(WordTally):
 class HashTallyTest(unittest.TestCase):
     
     def setUp(self):
-        # This will be ran from root directory of this project.
         dictionary_path = get_corpus_path("corpus/sorted_word_list.txt")
         sorted_dictionary = SortedFileListDictionary(self, dictionary_path,
           nonsense_english)
 
-        self.tally_keeper = HashTally(sorted_dictionary)
+        self.file_tally_keeper = HashTally(sorted_dictionary)
+        self.raw_tally_keeper = HashTally(sorted_dictionary)
+        self.test_path = get_corpus_path("corpus/great_expectations.txt")
+        self.read_file = open(self.test_path)
+
+    def test_count(self):
+        """
+        Test the counting methods.
+        """
+        self.file_tally_keeper
 
 if __name__ == "__main__":
     unittest.main()
