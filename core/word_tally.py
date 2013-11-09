@@ -119,16 +119,25 @@ class HashTallyTest(unittest.TestCase):
         self.file_tally_keeper = HashTally(sorted_dictionary)
         self.raw_tally_keeper = HashTally(sorted_dictionary)
         self.test_path = get_corpus_path("corpus/small_sample.txt")
-        self.great_expectations = ""
+        self.sample = ""
         self.word_set = set()
 
         with open(self.test_path) as test_file:
             for line in test_file:
-                self.great_expectations = "".join([self.great_expectations, line])
+                self.sample = "".join([self.sample, line])
 
                 lineparse = line.split(" ")
                 for word in lineparse:
                     self.word_set.add(word)
+
+        self.file_tally_dos = HashTally(sorted_dictionary)
+        self.raw_tally_dos = HashTally(sorted_dictionary)
+        self.test_path_dos = get_corpus_path("corpus/small_sample_dos.txt")
+        self.sample_dos = ""
+        
+        with open(self.test_path) as test_file:
+            for line in test_file:
+                self.sample_dos = "".join([self.sample_dos, line])
 
         self.word_set = tuple(self.word_set)
 
@@ -136,13 +145,27 @@ class HashTallyTest(unittest.TestCase):
         """
         Test the counting methods.
         """
-        self.file_tally_keeper.count(self.test_path, True)
-        self.raw_tally_keeper.count(self.great_expectations, False)
+        self.file_tally_keeper.count(self.test_path)
+        self.raw_tally_keeper.count(self.sample, False)
+
+        self.file_tally_dos.count(self.test_path_dos)
+        self.raw_tally_dos.count(self.test_path_dos)
         
         for i in xrange(50):
             random_word = random.choice(self.word_set)
-            self.assertEqual(self.file_tally_keeper.get_word_count(random_word),
-              self.raw_tally_keeper.get_word_count(random_word))
+            unix_file_tally = self.file_tally_keeper.get_word_count(random_word)
+            unix_raw_tally = self.raw_tally_keeper.get_word_count(random_word)
+            dos_file_tally = self.file_tally_dos.get_word_count(random_word)
+            dos_raw_tally = self.raw_tally_dos.get_word_count(random_word)
+
+            self.assertEqual(unix_file_tally, unix_raw_tally)
+            self.assertEqual(unix_file_tally, dos_file_tally)
+            self.assertEqual(unix_file_tally, dos_raw_tally)
+
+            self.assertEqual(dos_file_tally, dos_raw_tally)
+            self.assertEqual(dos_file_tally, unix_raw_tally)
+
+            self.assertEqual(dos_raw_tally, unix_raw_tally)
 
 if __name__ == "__main__":
     unittest.main()
