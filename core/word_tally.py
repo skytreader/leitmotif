@@ -1,3 +1,4 @@
+import random
 import re
 import unittest
 
@@ -24,6 +25,10 @@ class WordTally(object):
     @property
     def dictionary(self):
         return self.__dictionary
+
+    @property
+    def space_sep(self):
+        return self.__space_sep
 
     def get_word_count(self, word):
         """
@@ -93,14 +98,14 @@ class HashTally(WordTally):
         with open(filename) as corpus:
             for line in corpus:
                 line = line.strip()
-                words = self.__space_sep.split(line)
+                words = self.space_sep.split(line)
 
                 self.__count_flat(words)
 
     def __count_raw_text(self, text):
-        text = text.strip()
+        line = text.strip()
         # TODO We should also account for possible newlines inside the text.
-        words = self.__space_sep.split(line)
+        words = self.space_sep.split(line)
 
         self.__count_flat(words)
 
@@ -108,19 +113,36 @@ class HashTallyTest(unittest.TestCase):
     
     def setUp(self):
         dictionary_path = get_corpus_path("corpus/sorted_word_list.txt")
-        sorted_dictionary = SortedFileListDictionary(self, dictionary_path,
+        sorted_dictionary = SortedFileListDictionary(dictionary_path,
           nonsense_english)
 
         self.file_tally_keeper = HashTally(sorted_dictionary)
         self.raw_tally_keeper = HashTally(sorted_dictionary)
-        self.test_path = get_corpus_path("corpus/great_expectations.txt")
-        self.read_file = open(self.test_path)
+        self.test_path = get_corpus_path("corpus/small_sample.txt")
+        self.great_expectations = ""
+        self.word_set = set()
+
+        with open(self.test_path) as test_file:
+            for line in test_file:
+                self.great_expectations = "".join([self.great_expectations, line])
+
+                lineparse = line.split(" ")
+                for word in lineparse:
+                    self.word_set.add(word)
+
+        self.word_set = tuple(self.word_set)
 
     def test_count(self):
         """
         Test the counting methods.
         """
-        self.file_tally_keeper
+        self.file_tally_keeper.count(self.test_path, True)
+        self.raw_tally_keeper.count(self.great_expectations, False)
+        
+        for i in xrange(50):
+            random_word = random.choice(self.word_set)
+            self.assertEqual(self.file_tally_keeper.get_word_count(random_word),
+              self.raw_tally_keeper.get_word_count(random_word))
 
 if __name__ == "__main__":
     unittest.main()
