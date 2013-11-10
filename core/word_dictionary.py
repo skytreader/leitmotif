@@ -57,7 +57,7 @@ class SortedFileListDictionary(WordDictionary):
         
         with open(filename) as words:
             for w in words:
-                temp_list.append(w)
+                temp_list.append(w.lower())
 
         self._word_list = set(temp_list)
 
