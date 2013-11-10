@@ -1,3 +1,4 @@
+from utils import wordbook_sanitize
 """
 Defines a dictionary structure.
 
@@ -54,10 +55,12 @@ class SortedFileListDictionary(WordDictionary):
         super(SortedFileListDictionary, self).__init__()
         self._exclude_list = set(exclusions)
         temp_list = []
+        i = 0
         
         with open(filename) as words:
             for w in words:
-                temp_list.append(w.lower())
+                temp_list.append(wordbook_sanitize(w.lower()))
+                i += 1
 
         self._word_list = set(temp_list)
 

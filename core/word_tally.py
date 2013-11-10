@@ -89,10 +89,12 @@ class HashTally(WordTally):
         """
         for w in words:
             w = wordbook_sanitize(w)
-            if self.__tally.has_key(w):
-                self.__tally[w] += 1
-            else:
-                self.__tally[w] = 1
+
+            if self.dictionary.lookup(w):
+                if self.__tally.has_key(w):
+                    self.__tally[w] += 1
+                else:
+                    self.__tally[w] = 1
     
     def __count_as_file(self, filename):    
         with open(filename) as corpus:
@@ -113,11 +115,11 @@ class HashTallyTest(unittest.TestCase):
     
     def setUp(self):
         dictionary_path = get_corpus_path("corpus/sorted_word_list.txt")
-        sorted_dictionary = SortedFileListDictionary(dictionary_path,
+        self.sorted_dictionary = SortedFileListDictionary(dictionary_path,
           nonsense_english)
 
-        self.file_tally_keeper = HashTally(sorted_dictionary)
-        self.raw_tally_keeper = HashTally(sorted_dictionary)
+        self.file_tally_keeper = HashTally(self.sorted_dictionary)
+        self.raw_tally_keeper = HashTally(self.sorted_dictionary)
         self.test_path = get_corpus_path("corpus/small_sample.txt")
         self.sample = ""
         self.word_set = set()
@@ -128,10 +130,10 @@ class HashTallyTest(unittest.TestCase):
 
                 lineparse = line.split(" ")
                 for word in lineparse:
-                    self.word_set.add(word)
+                    self.word_set.add(wordbook_sanitize(word.lower()))
 
-        self.file_tally_dos = HashTally(sorted_dictionary)
-        self.raw_tally_dos = HashTally(sorted_dictionary)
+        self.file_tally_dos = HashTally(self.sorted_dictionary)
+        self.raw_tally_dos = HashTally(self.sorted_dictionary)
         self.test_path_dos = get_corpus_path("corpus/small_sample_dos.txt")
         self.sample_dos = ""
         
@@ -153,11 +155,22 @@ class HashTallyTest(unittest.TestCase):
         
         for i in xrange(50):
             random_word = random.choice(self.word_set)
+
             unix_file_tally = self.file_tally_keeper.get_word_count(random_word)
             unix_raw_tally = self.raw_tally_keeper.get_word_count(random_word)
             dos_file_tally = self.file_tally_dos.get_word_count(random_word)
             dos_raw_tally = self.raw_tally_dos.get_word_count(random_word)
 
+            if self.sorted_dictionary.lookup(random_word):
+                self.assertTrue(unix_file_tally > 0)
+                self.assertTrue(unix_raw_tally > 0)
+                self.assertTrue(dos_file_tally > 0)
+                self.assertTrue(dos_raw_tally > 0)
+            else:
+                self.assertEqual(unix_file_tally, 0)
+                self.assertEqual(unix_raw_tally, 0)
+                self.assertEqual(dos_file_tally, 0)
+                self.assertEqual(dos_raw_tally, 0)
             self.assertEqual(unix_file_tally, unix_raw_tally)
             self.assertEqual(unix_file_tally, dos_file_tally)
             self.assertEqual(unix_file_tally, dos_raw_tally)
