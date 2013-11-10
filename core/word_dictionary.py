@@ -26,7 +26,8 @@ class WordDictionary(object):
 
     def lookup(self, word):
         """
-        Returns true if the given word is in the word list.
+        Returns true if the given word is in the word list. Look-up performed
+        should be case insensitive.
         """
         pass
 
@@ -61,7 +62,8 @@ class SortedFileListDictionary(WordDictionary):
         self._word_list = set(temp_list)
 
     def lookup(self, word):
-        return word in self.word_list
+        return word.lower() in self.word_list
 
     def exclusive_lookup(self, word):
+        word = word.lower()
         return word in self.word_list and word not in self.exclude_list
