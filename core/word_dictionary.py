@@ -13,16 +13,16 @@ class WordDictionary(object):
         At all times, exclude_list must be a subset of word_list. exclude_list
         and word_list must be iterables.
         """
-        self.__exclude_list = None
-        self.__word_list = None
+        self._exclude_list = None
+        self._word_list = None
 
     @property
     def exclude_list(self):
-        return self.__exclude_list
+        return self._exclude_list
 
     @property
     def word_list(self):
-        return self.__word_list
+        return self._word_list
 
     def lookup(self, word):
         """
@@ -51,14 +51,14 @@ class SortedFileListDictionary(WordDictionary):
         containing the words to exclude from the dictionary.
         """
         super(SortedFileListDictionary, self).__init__()
-        self.__exclude_list = set(exclusions)
+        self._exclude_list = set(exclusions)
         temp_list = []
         
         with open(filename) as words:
             for w in words:
                 temp_list.append(w)
 
-        self.__word_list = set(temp_list)
+        self._word_list = set(temp_list)
 
     def lookup(self, word):
         return word in self.word_list
