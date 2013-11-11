@@ -88,7 +88,7 @@ class HashTally(WordTally):
         Count the words in iterable words and update self.__tally .
         """
         for w in words:
-            w = wordbook_sanitize(w)
+            w = wordbook_sanitize(w.lower())
 
             if self.dictionary.lookup(w):
                 if self.__tally.has_key(w):
@@ -153,6 +153,7 @@ class HashTallyTest(unittest.TestCase):
         self.file_tally_dos.count(self.test_path_dos)
         self.raw_tally_dos.count(self.test_path_dos)
         
+        # Loop still necessary?
         for i in xrange(50):
             random_word = random.choice(self.word_set)
 
@@ -179,6 +180,16 @@ class HashTallyTest(unittest.TestCase):
             self.assertEqual(dos_file_tally, unix_raw_tally)
 
             self.assertEqual(dos_raw_tally, unix_raw_tally)
+        
+        # a list of all words that occurs four times in the quick brown fox corpus.
+        four_list = ("quick", "brown", "fox", "jumps", "over", "lazy", "dog")
+        
+        for word in four_list:
+            print word
+            self.assertEqual(self.file_tally_keeper.get_word_count(word), 4)
+            self.assertEqual(self.raw_tally_keeper.get_word_count(word), 4)
+            self.assertEqual(self.file_tally_dos.get_word_count(word), 4)
+            self.assertEqual(self.raw_tally_dos.get_word_count(word), 4)
 
 if __name__ == "__main__":
     unittest.main()
