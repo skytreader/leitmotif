@@ -185,7 +185,6 @@ class HashTallyTest(unittest.TestCase):
         four_list = ("quick", "brown", "fox", "jumps", "over", "lazy", "dog")
         
         for word in four_list:
-            print word
             self.assertEqual(self.file_tally_keeper.get_word_count(word), 4)
             self.assertEqual(self.raw_tally_keeper.get_word_count(word), 4)
             self.assertEqual(self.file_tally_dos.get_word_count(word), 4)
