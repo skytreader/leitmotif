@@ -35,23 +35,29 @@ class WordTally(object):
         Returns how many instances of the word have we encountered so far.
         Return 0 if the word has never been encountered before.
         """
-        pass
+        raise NotImplementedError("get_word_count must be implemented.")
 
     def count(self, text, is_filename = True):
         """
         Counts the occurrences of words in the given text. Note that if the
         is_file flag is set to true, the parameter text is taken as a filename.
         """
-        pass
+        raise NotImplementedError("count must be implemented.")
     
     def get_most_frequent(self):
         """
+        Returns a tuple of words containing the most frequent word counts
+        encountered so far.
+
         Can be unimplemented.
         """
         pass
 
     def get_least_frequent(self):
         """
+        Returns a tuple of words containing the least frequent word counts
+        encountered so far.
+
         Can be unimplemented.
         """
         pass
@@ -64,6 +70,8 @@ class HashTally(WordTally):
     def __init__(self, word_dictionary):
         super(HashTally, self).__init__(word_dictionary)
         self.__tally = {}
+        self.__frequent_list = []
+        self.__most_frequent_count = 0
 
     def get_word_count(self, word):
         word_count = self.__tally.get(word)
