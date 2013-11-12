@@ -42,21 +42,26 @@ class CartesianComparator(CountComparator):
     """
     Compares WordTally objects by a Cartesian metric. For each of the most
     frequent words in tally1, get how frequent it is in tally2. They will be
-    the dimensions of the comparison.
+    the dimensions of the comparison. The same is done for tally2-tally1 and
+    the results are combined.
     """
-    # TODO Address commutativity
     
     def compare(self, tally1, tally2):
         """
         Takes the distance between tally1 and tally2 but no square root is
         performed for speed.
         """
-        t1_most_freq = tally1.get_most_frequent()
-        t1_freq = tally1.get_max_frequency()
+        t1_t2 = self.__cartesian_distance(tally1, tally2)
+        t2_t1 = self.__cartesian_distance(tally2, tally1)
+        return t1_t2 + t2_t1
+
+    def __cartesian_distance(self, t1, t2):
+        t1_most_freq = t1.get_most_frequent()
+        t1_freq = t1.get_max_frequency()
         running_sum = 0
 
         for word in t1_most_freq:
-            t2_freq = tally2.get_word_count(word)
+            t2_freq = t2.get_word_count(word)
             running_sum += (t1_freq - t2_freq) ** 2
 
         return running_sum
