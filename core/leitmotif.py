@@ -37,3 +37,26 @@ class CountComparator(object):
         are to each other.
         """
         raise NotImplementedError("compare must be implemented.")
+
+class CartesianComparator(CountComparator):
+    """
+    Compares WordTally objects by a Cartesian metric. For each of the most
+    frequent words in tally1, get how frequent it is in tally2. They will be
+    the dimensions of the comparison.
+    """
+    # TODO Address commutativity
+    
+    def compare(self, tally1, tally2):
+        """
+        Takes the distance between tally1 and tally2 but no square root is
+        performed for speed.
+        """
+        t1_most_freq = tally1.get_most_frequent()
+        t1_freq = tally1.get_max_frequency()
+        running_sum = 0
+
+        for word in t1_most_freq:
+            t2_freq = tally2.get_word_count(word)
+            running_sum += (t1_freq - t2_freq) ** 2
+
+        return running_sum
