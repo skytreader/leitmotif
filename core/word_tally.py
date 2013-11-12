@@ -53,6 +53,14 @@ class WordTally(object):
         """
         pass
 
+    def get_max_frequency(self):
+        most_freq = self.get_most_frequent()
+
+        if len(most_freq) > 0:
+            return self.get_word_count(most_freq[0])
+        else:
+            return 0
+
     def get_least_frequent(self):
         """
         Returns a tuple of words containing the least frequent word counts
