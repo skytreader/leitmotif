@@ -103,6 +103,17 @@ class HashTally(WordTally):
                     self.__tally[w] += 1
                 else:
                     self.__tally[w] = 1
+
+                this_count = self.__tally[w]
+
+                if this_count > self.__most_frequent_count:
+                    self.__most_frequent_count = this_count
+                    self.__frequent_list = [w]
+                elif this_count == self.__most_frequent_count:
+                    self.__frequent_list.append(w)
+
+    def get_most_frequent(self):
+        return tuple(self.__frequent_list)
     
     def __count_as_file(self, filename):    
         with open(filename) as corpus:
@@ -151,15 +162,16 @@ class HashTallyTest(unittest.TestCase):
 
         self.word_set = tuple(self.word_set)
 
-    def test_count(self):
-        """
-        Test the counting methods.
-        """
         self.file_tally_keeper.count(self.test_path)
         self.raw_tally_keeper.count(self.sample, False)
 
         self.file_tally_dos.count(self.test_path_dos)
         self.raw_tally_dos.count(self.test_path_dos)
+
+    def test_count(self):
+        """
+        Test the counting methods.
+        """
         
         # Loop still necessary?
         for i in xrange(50):
@@ -197,6 +209,14 @@ class HashTallyTest(unittest.TestCase):
             self.assertEqual(self.raw_tally_keeper.get_word_count(word), 4)
             self.assertEqual(self.file_tally_dos.get_word_count(word), 4)
             self.assertEqual(self.raw_tally_dos.get_word_count(word), 4)
+
+    def test_get_most_frequent(self):
+        most_frequent = ("the",)
+
+        self.assertEqual(self.file_tally_keeper.get_most_frequent(), most_frequent)
+        self.assertEqual(self.raw_tally_keeper.get_most_frequent(), most_frequent)
+        self.assertEqual(self.file_tally_dos.get_most_frequent(), most_frequent)
+        self.assertEqual(self.raw_tally_dos.get_most_frequent(), most_frequent)
 
 if __name__ == "__main__":
     unittest.main()
