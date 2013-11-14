@@ -9,9 +9,16 @@ WordTally is also labeled as to what text it tallies.
 """
 
 class Leitmotif(object):
+    """
+    Leitmotif classes are defined by, at least, the following components:
+
+      - how words are counted (word_tally)
+      - the comparison method used to compare similarity of word counts
+    """
     
-    def __init__(self):
+    def __init__(self, comparator):
         self._word_tallies = []
+        self.comparator = comparator
     
     def add_word_tally(self, word_tally):
         """
@@ -34,6 +41,45 @@ class Leitmotif(object):
         ("leitmotif") of the texts tallied, as added in this instance.
         """
         raise NotImplementedError("leitmotif must be implemented.")
+
+class IntersectionsLeitmotif(Leitmotif):
+    """
+    Costly computation for leitmotifs (O(n^2)). The idea is to compare every
+    word tally with each other and get the closests ones. Then, get the
+    intersection of their most frequent words.
+
+    Closeness is defined as a threshold. All tallies that are at most as far as
+    the threshold set are considered "close".
+    """
+    
+    # TODO Take into account how close is it to how many members of the set.
+    # That is, view the tallies as a graph and consider how connected a tally
+    # is to the rest of the set.
+    def leitmotif(self, comparator, threshold):
+        super(IntersectionsLeitmotif, self).__init__(comparator)
+        self.threshold = threshold
+        self.__close_tallies = set()
+
+    @property
+    def close_tallies(self):
+        return self.__close_tallies
+
+    def __is_close(self, tally1, tally2):
+        distance = self.comparator.compare(tally1, tally2)
+        return distance <= self.threshold
+
+    def __compute_closeness(self, tally):
+        """
+        Compute the closeness of the given tally with the rest of what's already
+        added in this class. If they are close enough, the tally is added to
+        the close tally set.
+        """
+        
+        # FIXME See TODO above!!!
+        for t in self._word_tally:
+            if self.__is_close(t, tally):
+                self.__close_tallier.add(t)
+                break
 
 class CountComparator(object):
     
