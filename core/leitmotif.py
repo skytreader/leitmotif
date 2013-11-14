@@ -28,6 +28,13 @@ class Leitmotif(object):
 
         self._word_tallies.add(word_tally)
 
+    def leitmotif(self):
+        """
+        Returns a set of words which is the possible recurring theme
+        ("leitmotif") of the texts tallied, as added in this instance.
+        """
+        raise NotImplementedError("leitmotif must be implemented.")
+
 class CountComparator(object):
     
     def compare(self, tally1, tally2):
