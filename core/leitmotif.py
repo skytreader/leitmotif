@@ -1,4 +1,6 @@
 import collections
+import math
+import unittest
 
 from word_tally import WordTally
 
@@ -17,6 +19,7 @@ class Leitmotif(object):
     """
     
     def __init__(self, comparator):
+        # FIXME Should this be a set?
         self._word_tallies = []
         self.comparator = comparator
     
@@ -91,11 +94,25 @@ class IntersectionsLeitmotif(Leitmotif):
         self.__close_tallies = set()
 
         # Initially set to 0 since there should be no tallies in the set yet.
-        self.close_count_limit = 0
+        self.__close_count_limit = 0
 
     @property
     def close_tallies(self):
         return self.__close_tallies
+
+    @property
+    def close_count_limit(self):
+        return self.__close_count_limit
+
+    def add_word_tally(self, tally):
+        """
+        Overridden to compute close_count_limit every time a tally is added.
+        """
+        # Compute closeness first before calling super method so that closeness
+        # computation would not have to check for equality.
+        self.__compute_closeness(tally)
+        super(IntersectionLeitmotif, self).add_word_tally(tally)
+        self.__close_count_limit = int(math.ceil(len(self._word_tallies) * self.closeness))
 
     def __is_close(self, tally1, tally2):
         distance = self.comparator.compare(tally1, tally2)
@@ -105,14 +122,17 @@ class IntersectionsLeitmotif(Leitmotif):
         """
         Compute the closeness of the given tally with the rest of what's already
         added in this class. If they are close enough, the tally is added to
-        the close tally set.
+        the close tally set. Nothing is returned.
         """
+        similar_count = 0
         
         # FIXME See TODO above!!!
         for t in self._word_tally:
             if self.__is_close(t, tally):
-                self.__close_tallier.add(t)
-                break
+                similar_count += 1
+
+            if similar_count == self.close_count_limit:
+                self.__close_tallies.add(tally)
 
 class CountComparator(object):
     
