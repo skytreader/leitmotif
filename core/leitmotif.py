@@ -97,10 +97,6 @@ class IntersectionsLeitmotif(Leitmotif):
         self.__close_count_limit = 0
 
     @property
-    def close_tallies(self):
-        return self.__close_tallies
-
-    @property
     def close_count_limit(self):
         return self.__close_count_limit
 
@@ -133,6 +129,15 @@ class IntersectionsLeitmotif(Leitmotif):
 
             if similar_count == self.close_count_limit:
                 self.__close_tallies.add(tally)
+
+    def leitmotif(self):
+        # Get one item from close_tallies to become the comparison point.
+        comparison_point = self.__close_tallies.pop()
+        close_clique = tuple(self.__close_tallies)
+        theme = comparison_point.intersection(*close_clique)
+        # Return the comparison_point to the set of close tallies.
+        self.__close_tallies.add(comparison_point)
+        return theme
 
 class CountComparator(object):
     
