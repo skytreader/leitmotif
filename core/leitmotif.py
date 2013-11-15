@@ -68,10 +68,7 @@ class IntersectionsLeitmotif(Leitmotif):
     number of tallies to which a given tally must be similar to in order to be
     considered close.
     """
-    
-    # TODO Take into account how close is it to how many members of the set.
-    # That is, view the tallies as a graph and consider how connected a tally
-    # is to the rest of the set.
+
     def __init__(self, comparator, similarity, closeness = 0.5):
         """
         Creates an instance of IntersectionLeitmotif.
@@ -122,7 +119,6 @@ class IntersectionsLeitmotif(Leitmotif):
         """
         similar_count = 0
         
-        # FIXME See TODO above!!!
         for t in self._word_tally:
             if self.__is_close(t, tally):
                 similar_count += 1
@@ -176,3 +172,10 @@ class CartesianComparator(CountComparator):
             running_sum += (t1_freq - t2_freq) ** 2
 
         return running_sum
+
+class IntersectionLeitmotifTests(unittest.TestCase):
+    
+    pass
+
+if __name__ == "__main__":
+    unittest.main()
