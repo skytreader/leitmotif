@@ -50,15 +50,48 @@ class IntersectionsLeitmotif(Leitmotif):
 
     Closeness is defined as a threshold. All tallies that are at most as far as
     the threshold set are considered "close".
+
+    Properties:
+    similarity - A number defining how similar two tallies should be (smaller
+    value means more similar tallies).
+
+    closeness - A number defining how many other tallies must any given tally be
+    similar to before it is considered close to the set. It should always be
+    between 0 and 1. 0 will make the whole set of tallies close (regardless of
+    similarity) while 1 would require a tally to be similar to everythin in the
+    set.
+    
+    close_count_limit - Simply ceil(tallies_in_the_set * closeness). The _exact_
+    number of tallies to which a given tally must be similar to in order to be
+    considered close.
     """
     
     # TODO Take into account how close is it to how many members of the set.
     # That is, view the tallies as a graph and consider how connected a tally
     # is to the rest of the set.
-    def leitmotif(self, comparator, threshold):
+    def __init__(self, comparator, similarity, closeness = 0.5):
+        """
+        Creates an instance of IntersectionLeitmotif.
+
+        comparator - An instance of CountComparator class to be used for
+        comparing tallies.
+
+        similarity - A number defining how similar two tallies should be (smaller
+        value means more similar tallies).
+
+        closeness - A number between 0 and 1, defining how many other tallies
+        must any given tally be similar to before it is considered close to the
+        set. 0 will make the whole set of tallies close while 1 would require
+        a tally to be similar to everything in the set. Defaults to 0.5 (tally
+        must be similar to at least half the set before it is considered close).
+        """
         super(IntersectionsLeitmotif, self).__init__(comparator)
-        self.threshold = threshold
+        self.similarity = similarity
+        self.closeness = closeness
         self.__close_tallies = set()
+
+        # Initially set to 0 since there should be no tallies in the set yet.
+        self.close_count_limit = 0
 
     @property
     def close_tallies(self):
@@ -66,7 +99,7 @@ class IntersectionsLeitmotif(Leitmotif):
 
     def __is_close(self, tally1, tally2):
         distance = self.comparator.compare(tally1, tally2)
-        return distance <= self.threshold
+        return distance <= self.similarity
 
     def __compute_closeness(self, tally):
         """
